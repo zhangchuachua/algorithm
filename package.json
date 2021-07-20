@@ -1,0 +1,11 @@
+{
+  "name": "algorithm",
+  "version": "1.0.0",
+  "description": "shu\b\b\b\b数据结果与\b\b\b\b\b\b\b结构\b\b\b\b\b\b\b数据结构与算法一定要拿下！！！",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

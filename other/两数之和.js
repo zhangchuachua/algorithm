@@ -1,17 +1,30 @@
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
 };
 // *这种写法还可以，先把nums克隆下来，然后进行排序（升序），然后从两边开始加，如果大于target那么让tail向小的方向移，
 // *如果小了就让head向大的方向移，最终找到两个对应的值，然后使用indexOf, lastIndexOf 因为题中说了，必然有结果，
 // *而且一个index不会出现多次，所以从两个方向找，必然可以找到  
 // *时间复杂度应该是 O(n) 吧 sort: O(n) while: O(n) indexOf: O(n) lastIndexOf: O(n)
 function twoSum(nums, target) {
-    var sort = __spreadArrays(nums);
+    var sort = __spread(nums);
     sort.sort(function (a, b) { return a - b; });
     var head = 0;
     var tail = nums.length - 1;

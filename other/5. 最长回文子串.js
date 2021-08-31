@@ -1,0 +1,4 @@
+function longestPalindrome(s) {
+    return '';
+}
+;

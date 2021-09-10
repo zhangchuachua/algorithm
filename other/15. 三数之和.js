@@ -1,3 +1,4 @@
+"use strict";
 //* 这个版本可太垃圾了，时间复杂度和空间复杂度都拉到最高。
 function threeSum(nums) {
     if (nums.length < 3)

@@ -15,15 +15,16 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
 };
 // *这个算法可太简单了
 function intersection(nums1, nums2) {
     var set1 = new Set(nums1);
     var set2 = new Set(nums2);
-    return __spread(set1).filter(function (item) {
+    return __spreadArray([], __read(set1)).filter(function (item) {
         return set2.has(item);
     });
 }
@@ -51,6 +52,6 @@ function intersectionNoSet(nums1, nums2) {
         else
             index1++;
     }
-    return __spread(res);
+    return __spreadArray([], __read(res));
 }
 console.log(intersectionNoSet([4, 7, 9, 7, 6, 7], [5, 0, 0, 6, 1, 6, 2, 2, 4]));

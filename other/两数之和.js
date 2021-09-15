@@ -15,16 +15,17 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spread = (this && this.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-    return ar;
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
 };
 // *这种写法还可以，先把nums克隆下来，然后进行排序（升序），然后从两边开始加，如果大于target那么让tail向小的方向移，
 // *如果小了就让head向大的方向移，最终找到两个对应的值，然后使用indexOf, lastIndexOf 因为题中说了，必然有结果，
 // *而且一个index不会出现多次，所以从两个方向找，必然可以找到  
 // *时间复杂度应该是 O(n) 吧 sort: O(n) while: O(n) indexOf: O(n) lastIndexOf: O(n)
 function twoSum(nums, target) {
-    var sort = __spread(nums);
+    var sort = __spreadArray([], __read(nums));
     sort.sort(function (a, b) { return a - b; });
     var head = 0;
     var tail = nums.length - 1;

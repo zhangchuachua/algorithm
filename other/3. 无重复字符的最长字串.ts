@@ -21,9 +21,7 @@ function lengthOfLongestSubstring(s: string): number {
       if (str.length > subString.length) {
         subString = str;
       }
-      // !注意这里很重要，我们就需要重新定位到与当前遍历字符发生重复的第一个字符的位置处，比如 'abcabcabc' 我们遇到了第二个a，
-      // !我们就需要找到第一个a，然后移到下一个，也就是b，这个很重要，不然会陷入死循环，这个index也是这个作用，比如遇到了
-      // !第三个a，这个时候的index就会提示我们这个当前字串从哪里开始的，直接跳过第一个a，从第二个a开始查找
+      // !注意这里很重要，我们就需要重新定位到与当前遍历字符发生重复的第一个字符的位置处，比如 'abcabcabc' 我们遇到了第二个a，我们就需要找到第一个a，然后移到下一个，也就是b，这个很重要，不然会陷入死循环，这个index也是这个作用，比如遇到了第三个a，这个时候的index就会提示我们这个当前字串从哪里开始的，直接跳过第一个a，从第二个a开始查找
       i = s.indexOf(s[i], index) + 1; // *这里的i已经指向了下一个所索引
       // *对index重新赋值，因为字串已经重新赋值
       index = i;
@@ -49,8 +47,9 @@ function lengthOfLongestSubstringOptimization(s: string): number {
   // *进行遍历
   for (let i = 0; i < s.length; i += 1) {
     // !重点在这里，我们必须当重复字符串小于当前的i时，才修改前置index的位置，合理！
-    // *如果是s.indexOf(s[i],minIndex !== -1 这样的判断条件，那么每一次都会判断成功，比如'abcabc' 第一次判断'a'
+    // *如果是s.indexOf(s[i],minIndex) !== -1 这样的判断条件，那么每一次都会判断成功，比如'abcabc' 第一次判断'a'
     // *s中有a的存在，那么就直接对minIndex进行修改，修改为minIndex指向b，下一个判断b，然后又判断成功……
+    // *而且这里不出现s.indexOf = -1 的情况，因为搜索s[i],总能搜索到自己。而且不能等于i，如果等于i的话，遇到搜到自己的情况就会导致错误。
     if (s.indexOf(s[i], minIndex) < i) {
       minIndex = s.indexOf(s[i], minIndex) + 1;
     } else {
@@ -61,10 +60,10 @@ function lengthOfLongestSubstringOptimization(s: string): number {
   return max;
 }
 
-// console.log(lengthOfLongestSubstringOptimization('abcabcbb'));
+console.log(lengthOfLongestSubstringOptimization('abcabcbb'));
 
 // *这是官方的做法，还是有点难以理解了
-function lengthOfLongestSubstringOfficical(s: string): number {
+function lengthOfLongestSubstringOfficial(s: string): number {
   // *使用Set保证没有重复的字符
   const occ = new Set();
   // 这里无意义,因为这里的n全局只使用了一次
@@ -100,4 +99,4 @@ function lengthOfLongestSubstringOfficical(s: string): number {
 };
 
 
-console.log(lengthOfLongestSubstringOfficical('abcadc'));
+// console.log(lengthOfLongestSubstringOfficial('abcadc'));

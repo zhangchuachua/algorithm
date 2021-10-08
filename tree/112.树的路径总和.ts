@@ -32,10 +32,12 @@ function hasPathSumOptimization(root: TreeNode | null, targetSum: number): boole
 }
 
 // !不是递归的做法
+// !不是递归的做法使用的是广度优先遍历，相当于是把每一层的当前节点的值相加，就可以得到对应的和，不用再像递归那样，返回到上个节点再去判断其他的子树。
 var hasPathSumNotRecursive = function (root: TreeNode | null, targetSum: number) {
   if (!root) return false;
   // 创建两个队列
   // 用来存储节点
+  // *广度优先遍历使用队列这个数据结构来进行
   let nodeQue = [];
   // 用来存储根节点到这个节点的总和
   let valQue = [];

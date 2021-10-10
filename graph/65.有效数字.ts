@@ -1,7 +1,7 @@
 import { Graph } from "./base";
 
 // *这是我一开始的思路，理清那些值后面可以接那些值，并且使用邻接表的方式列出来，然后循环字符串，比较当前字符和下一个字符是否符合规则，如果不符合规则就返回false，但是我这里对于特殊情况很难做，比如 'e' 'e9' 这样总是判断为true
-// !这是错误的
+// !这种做法完全就是不了解图的定义
 // const graph: Graph = {
 //   '0': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'e', 'E'],
 //   '1': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', 'e', 'E'],
@@ -31,6 +31,37 @@ import { Graph } from "./base";
 // };
 
 // !解体思路需要使用看看 算法.md 里面对应的一节
-function isNumber(s:string):boolean {
+// *注意这里的图的构建方式  后面添加的字符是哪一种就移动到对应的状态上去
+// !感觉图的构建才是最难的，不是说这里的把图抽象称对象而是画出图的对应关系
+const graph: { [key: string]: { [key: string]: string } } = {
+  0: { 'blank': '0', 'sign': '1', '.': '2', 'digit': '6' },
+  1: { 'digit': '6', '.': '2' },
+  2: { 'digit': '3' },
+  3: { 'digit': '3', 'e': '4' },
+  4: { 'digit': '5', 'sign': '7' },
+  5: { 'digit': '5' },
+  6: { 'digit': '6', '.': '3', 'e': '4' },
+  7: { 'digit': '5' }
+};
 
+function charJudge(char: string) {
+  if (char === ' ') return 'blank';
+  if (char === '.') return '.';
+  if (!isNaN(Number(char))) return 'digit';
+  if (char === 'e' || char === 'E') return 'e';
+  if (char === '+' || char === '-') return 'sign';
+  return 'undefined';
 }
+
+function isNumber(s: string): boolean {
+  let currentStatus = '0';
+
+  for (let i of s.trim()) {
+    const charType = charJudge(i);
+    const a = graph[currentStatus][charType];
+    console.log(i, a, charType);
+    if (!a) return false;
+    currentStatus = a;
+  }
+  return ['3', '5', '6'].includes(currentStatus);
+};

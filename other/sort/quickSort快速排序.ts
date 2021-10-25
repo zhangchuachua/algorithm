@@ -30,7 +30,7 @@ export function sortArray(nums: number[]): number[] {
   quickSort(nums);
   return nums;
 };
-console.log(sortArray([5, 2, 3, 1]));
+// console.log(sortArray([5, 2, 3, 1]));
 
 // !这是阮一峰版的快速排序，这可以说是非常非常好理解了。 还是随机选择一个基数，然后直接创建两个数组来存储比基数小的和大于等于基数的，然后不断递归就可以了。因为使用了额外的两个数组进行存储，就不会出现指针的指向问题了，但是也是因为两个数组导致性能差了很多。 如果便于理解的话还是可以的。
 export function quickSortRuanYiFeng(nums: number[]): number[] {
@@ -43,4 +43,32 @@ export function quickSortRuanYiFeng(nums: number[]): number[] {
   return new Array<number>().concat(quickSortRuanYiFeng(less), pivot, quickSortRuanYiFeng(greater));
 }
 
-console.log(quickSortRuanYiFeng([1,2,3,12,123,1,5,4,534,5,-12,21,-6]));
+// console.log(quickSortRuanYiFeng([1,2,3,12,123,1,5,4,534,5,-12,21,-6]));
+
+export function quickSortOfficial(nums: number[], l: number = 0, r: number = nums.length - 1): number[] {
+  if (nums.length <= 1) return nums;
+
+  function swap(arr: number[], i: number, j: number) {
+    if (i === j) return;
+    arr[i] = arr[i] ^ arr[j];
+    arr[j] = arr[i] ^ arr[j];
+    arr[i] = arr[i] ^ arr[j];
+  }
+
+  const pivotIndex = Math.round(Math.random() * (nums.length - 1));
+  swap(nums, pivotIndex, r);
+  let i = l - 1;
+  let j = l;
+  while (j < r - 1) {
+    if (nums[j] > nums[r]) j++;
+    else {
+      i++;
+      swap(nums, i, j);
+      j++;
+    }
+  }
+  console.log(pivotIndex, nums, i);
+  return [];
+}
+
+quickSortOfficial([2,8,6,7,5,9,4,5]);

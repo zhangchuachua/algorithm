@@ -10,8 +10,8 @@ export default class MinHeap<T> {
 
   //* 插入函数
   insert(value: T) {
-      this.heap.push(value); // *先把值放到末尾， 然后再用下面的函数进行交换
-      this.shiftUp(this.heap.length - 1);
+    this.heap.push(value); // *先把值放到末尾， 然后再用下面的函数进行交换
+    this.shiftUp(this.heap.length - 1);
   }
 
   //* 删除堆顶函数
@@ -67,8 +67,8 @@ export default class MinHeap<T> {
   static isMinHeap<T>(heap: T[]): boolean {
     if (!heap.length || heap.length === 1) return true;
     for (let i = heap.length - 1; i >= 0; i--) {
-      // *位运算
-      const parentIndex = i >> 1;
+      // *位运算 结果就相当于  Math.floor(parentIndex / 2);
+      const parentIndex = (i - 1) >> 1;
       if (heap[parentIndex] > heap[i]) return false;
     }
     return true;

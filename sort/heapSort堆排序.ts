@@ -1,7 +1,5 @@
 // !堆排序的问题在于如何构建最小堆，最大堆。只要能够构建出来就很简单了。
-
-import { quickSortOfficial } from "./quickSort快速排序";
-import { isEqual } from 'lodash';
+// !注意，使用class类的方式来构建堆，在用来排序性能其实不是很好，因为需要现遍历数组将数组中的值放到堆中，然后还要再遍历数组将值取出来。 所以对于一个已有的 number数组 应该直接将这个数组转化为堆，而不是重新构建一个堆。
 
 export class MaxHeap {
   readonly maxHeap: number[];
@@ -11,9 +9,15 @@ export class MaxHeap {
     else throw new Error('not a maxHeap');
   }
 
+  // !这是最开始的插入操作，但是这是错误的。 插入操作一定不能从前插入，需要从后插入。因为第一，会把数组其他元素统统向后移动一位影响性能，第二，会造成堆结构的错误。因为数组的元素的索引发生变化时，一些元素的父元素就发生了变化，导致有时候父元素小于子元素了。堆也就错了。
+  // insert(num: number) {
+  //   this.maxHeap.unshift(num);
+  //   this.shiftDown(0);
+  // }
+
   insert(num: number) {
-    this.maxHeap.unshift(num);
-    this.shiftDown(0);
+    this.maxHeap.push(num);
+    this.shiftUp(this.maxHeap.length - 1);
   }
 
   pop() {
@@ -46,6 +50,15 @@ export class MaxHeap {
     }
   }
 
+  private shiftUp(index: number) {
+    if (index <= 0) return;
+    const parentIndex = index - 1 >> 1;
+    if (this.maxHeap[parentIndex] < this.maxHeap[index]) {
+      this.swap(parentIndex, index);
+      this.shiftUp(parentIndex);
+    }
+  }
+
   private swap(i: number, j: number) {
     if (i === j) return;
     this.maxHeap[i] = this.maxHeap[i] ^ this.maxHeap[j];
@@ -64,27 +77,20 @@ export class MaxHeap {
   }
 }
 
-const heap = new MaxHeap();
-const length = 50;
-const nums = [48, 48, -20, 20, -38, 20, -42, -3, 34, 0, -21, -29, -47, 35, -43, 11, -18, -25, -45];
+export function heapSortClass(nums: number[]): number[] {
+  const heap = new MaxHeap();
+  nums.forEach(item => heap.insert(item));
+  // *因为使用的是最大堆，所以先pop出的是最大值，所以map出来的是一个降序的数组，所以使用了 reverse
+  return nums.map(() => heap.pop() as number).reverse();
+}
+
+// TODO 学习直接将数组转化为堆
+
+// *生成指定长度的随机数字数组。
+// const length = 10000;
 // const nums = Array.from({ length: length }, v => {
 //   let res = Math.round(Math.random() * length);
 //   if (Math.round(Math.random())) return res;
 //   else return ~res + 1;
 // });
-// console.log(nums);
-for (let i of nums) {
-  heap.insert(i);
-  // const isOK = MaxHeap.isMaxHeap(heap.maxHeap);
-  // if (!isOK) {
-  //   console.log(isOK, i);
-  //   break;
-  // }
-}
-console.log(heap.maxHeap);
-// const heapRes = nums.map(() => {
-//   return heap.pop();
-// });
-// console.log(heapRes);
-// const official = quickSortOfficial(nums);
-// console.log(isEqual(heapRes, official),heapRes);
+

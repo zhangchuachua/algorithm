@@ -84,13 +84,52 @@ export function heapSortClass(nums: number[]): number[] {
   return nums.map(() => heap.pop() as number).reverse();
 }
 
-// TODO 学习直接将数组转化为堆
+// *这里就是 将数组转化为堆，然后再进行取最大值。
+function heapSortHeapify(nums: number[]): number[] {
+  if (nums.length <= 1) return nums;
 
-// *生成指定长度的随机数字数组。
-// const length = 10000;
-// const nums = Array.from({ length: length }, v => {
-//   let res = Math.round(Math.random() * length);
-//   if (Math.round(Math.random())) return res;
-//   else return ~res + 1;
-// });
+  // *leetcode 上一些个人的题解，用于格式化数组生成最大堆，性能与下面那种差不多。
+  // function heapify(nums: number[]) {
+  //   for (let i = 1; i < nums.length; i++) {
+  //     let parent = (i - 1) >> 1;
+  //     let child = i;
+  //     while (child > 0 && nums[child] > nums[parent]) {
+  //       swap(parent, child);
+  //       child = parent;
+  //       parent = (parent - 1) >> 1;
+  //     }
+  //   }
+  // }
+
+  function heapify(arr: number[]) {
+    // *因为堆是一个完全二叉树，所以这里得到最后一个有子树的节点。然后开始向前遍历。   就不用去遍历那些没有子树的节点了。
+    // *对于一个完全二叉树，找到最后一个有子树的节点的索引值的方式为： Math.floor(nums.length/2)-1
+    for (let i = (arr.length >> 1) - 1; i >= 0; i--) {
+      shiftDown(i);
+    }
+  }
+  // *这个函数就是 堆里面进行整理的函数。 因为我们从有子树的节点进行比较，所以遇到符合条件，就应该把节点向下移动，所以是shiftDown  而不是 shiftUp， shiftUp用于向上移动
+  // *使用shiftUp也可以完成堆的整理。  但是这里选择 shiftDown 是因为 堆 pop时也需要用到 shiftDown 一举两得。
+  const shiftDown = (i: number) => {
+    const lChild = (i << 1) + 1;
+    const rChild = (i << 1) + 2;
+    if (nums[lChild] !== undefined && nums[lChild] > nums[i]) {
+      swap(lChild, i);
+      shiftDown(lChild);
+    }
+    if (nums[rChild] !== undefined && nums[rChild] > nums[i]) {
+      swap(rChild, i);
+      shiftDown(rChild);
+    }
+  };
+  const swap = (i: number, j: number) => {
+    if (i === j) return;
+    nums[i] = nums[i] ^ nums[j];
+    nums[j] = nums[i] ^ nums[j];
+    nums[i] = nums[i] ^ nums[j];
+  };
+
+  heapify(nums);
+  return nums;
+}
 

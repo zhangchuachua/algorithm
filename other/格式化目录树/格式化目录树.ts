@@ -1,19 +1,14 @@
-import { createReadStream } from "fs";
+import { createReadStream, createWriteStream } from "fs";
 import { findLastIndex } from 'lodash';
 import readline from 'readline';
 import Koa from 'koa';
 import { v4 } from 'uuid';
-
 
 interface TocNode {
   id: string;
   level: number;
   text: string;
   pid: string;
-}
-
-interface TocTree extends TocNode {
-  children: any[];
 }
 
 const app = new Koa();
@@ -24,6 +19,8 @@ let pointer: {
   id: string;
   level: number;
 };
+
+const json = createWriteStream('./out.json');
 
 // !逐行读取文件流 第一种方法
 async function name() {
@@ -76,23 +73,29 @@ app.use(async ctx => {
       (map.get(item.pid) as TocNode[]).push(item);
     }
   });
-  function x(arr: any[]) {
-    arr.forEach(item => {
-      let child = [];
-      if(map.get(item.id)?.length) child = x(map.get(item.id) as any[])
-      item.children = child;
-    })
-    return arr;
-  }
-  const result = x(map.get('') as TocNode[]);
-  // console.dir(result, { depth: null });
-  ctx.status = 200;
-  ctx.body = JSON.stringify(result);
-});
 
-// name().then(() => {
-//   console.dir(root, { depth: null });
-// });
+  function generatorTree(arr: any[]): any[] {
+    return arr.map(item => {
+      let child;
+      if (map.get(item.id)?.length) child = generatorTree(map.get(item.id) as TocNode[]);
+      if (child) {
+        return {
+          text: item.text,
+          children: child
+        };
+      } else return item.text;
+    });
+  }
+
+  const result = generatorTree(map.get('') as TocNode[]);
+
+  json.write(JSON.stringify(result));
+  json.end(() => {
+    console.log('完成');
+  });
+  ctx.status = 200;
+  ctx.body = result;
+});
 
 app.listen(3001, () => {
   console.log('3001');

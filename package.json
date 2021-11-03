@@ -10,9 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^16.11.6",
-    "lodash": "^4.17.21"
+    "koa": "^2.13.4",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.176"
+    "@types/koa": "^2.13.4",
+    "@types/lodash": "^4.14.176",
+    "@types/uuid": "^8.3.1"
   }
 }

@@ -109,7 +109,8 @@ function heapSortHeapify(nums: number[]): number[] {
     }
   }
   // *这个函数就是 堆里面进行整理的函数。 因为我们从有子树的节点进行比较，所以遇到符合条件，就应该把节点向下移动，所以是shiftDown  而不是 shiftUp， shiftUp用于向上移动
-  // *使用shiftUp也可以完成堆的整理。  但是这里选择 shiftDown 是因为 堆 pop时也需要用到 shiftDown 一举两得。
+  // *使用shiftUp也可以完成堆的整理。  但是这里选择 shiftDown 是因为 堆 pop时也需要用到 shiftDown 一举两得。(注意看下面，这只是一个方面）
+  // !这里补充，感觉shiftUp并不能在这里的情况下完成堆的整理，因为这里是从中间节点开始的，而不是从最后一个节点开始的，中间节点有下移的空间。但是如果上移的话，后面的节点并没有进行排序，所以不能保证可以完成堆的整理。  如果需要使用上移的话，最好从最后一个开始。 但是那样循环次数会增加。
   const shiftDown = (i: number) => {
     const lChild = (i << 1) + 1;
     const rChild = (i << 1) + 2;

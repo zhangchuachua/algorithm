@@ -1,6 +1,9 @@
 import { ListNode } from "../linkedList/ListNode";
 
-// !自己琢磨出来的写法，使用了堆数据结构，但是效率很一般在力扣上时间平均超过48%，空间上平均超过32%，
+// *注意 在力扣上看到很多解题都是用的优先级队列，其实优先级队列，也是一种抽象的数据结构，可以使用堆来封装为优先级队列。队列也就是先进先出，优先级队列给定一个规则指定优先级，优先级高的先出。  规则可以是最小的数，可以是最大的数，这么一说是不是就和堆像了。
+// *这道题虽然级别是难，但是在力扣上有很多解法。
+
+// !自己琢磨出来的写法，使用了堆数据结构，但是效率很一般在力扣上时间平均超过48%，空间上平均超过32%，我这里的写法还可以再精简一下
 // !为什么选中堆数据结构呢： 因为存储的是链表，链表的深度不知，如果将链表平铺出来，再进行排序，再遍历生成新的链表，可能时间复杂度很高（我没有试过这个做法，但是也是一种方法了） 这道题，然而最小堆可以直接就获取当前最小的val，所以每次只需要不断获取最小的值，然后去掉这个节点，而且链表恰好还是升序链表，重新整理堆就可以了。  所以非常适合
 export function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
   let arr = lists.filter(item => item !== null); // !这里直接过滤掉null
@@ -58,43 +61,67 @@ export function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
   return result;
 }
 
-// const a: (ListNode | null)[] = [
-//   {
-//     val: 1,
-//     next: {
-//       val: 4,
-//       next: {
-//         val: 5,
-//         next: null
-//       }
-//     }
-//   },
-//   null,
-//   {
-//     val: 1,
-//     next: {
-//       val: 3,
-//       next: {
-//         val: 4,
-//         next: null
-//       }
-//     }
-//   },
-//   {
-//     val: 2,
-//     next: {
-//       val: 6,
-//       next: null
-//     }
-//   },
-//   null
-// ];
-
 const a: (ListNode | null)[] = [
+  {
+    val: 1,
+    next: {
+      val: 4,
+      next: {
+        val: 5,
+        next: null
+      }
+    }
+  },
   null,
   {
-    val: 1, next: null
-  }
+    val: 1,
+    next: {
+      val: 3,
+      next: {
+        val: 4,
+        next: null
+      }
+    }
+  },
+  {
+    val: 2,
+    next: {
+      val: 6,
+      next: null
+    }
+  },
+  null
 ];
 
-console.dir(mergeKLists(a), { depth: null });
+// const a: (ListNode | null)[] = [
+//   null,
+//   {
+//     val: 1, next: null
+//   }
+// ];
+
+// console.dir(mergeKLists(a), { depth: null });
+
+// *暴力求解，暴力求解的时间复杂度也不高，也就 reduce 循环km次（m为最长的链表长度）其实就是n次  sort时间复杂度为 O(nLogn) reduce 循环n次，时间复杂度为 O(nLogn) 空间复杂度， O(n) 但是这个写法绝对是我见过的最精简的写法了 最好快的写法了 不记得reduce也可以去复习一下 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+export function mergeKListsViolence(lists: (ListNode | null)[]): ListNode | null {
+  return lists
+    .reduce<ListNode[]>((prev, current) => { // 对lists进行循环
+      while (current) {// 循环当前链表
+        prev.push(current); // *这里是将链表的节点放入数组，而不是链表的val
+        current = current.next;
+      }
+      return prev;// 返回
+    }, []) // *prev 初始为空字符串  返回的结果为所有的链表节点数组  注意 这里的返回的数组值应该是 [{1->2->3->null},{2->3->null}, {3->null}] 这样的，因为截取的时候并没有将next指向null。
+    .sort((a, b) => {
+      return a.val - b.val; // *对节点的val值进行排序
+    })
+    .reduceRight<ListNode | null>((p, n) => (n.next = p, p = n, p), null); // !这里是重点 此时的数组已经是 [ {1->...}, {1->...}... ] 等一系列排序好了的链表节点数组，这里从右开始遍历，也就是最大的值，然后将prev初始化为 null， 然后倒序开始连接节点， 这样不仅可以保证最后一个节点的next为null，还可以保证遍历完成返回的值刚好指向头部，就是一条完整的链表了。
+  //* 如果使用从左到右，就需要使用一个head记录头部，
+}
+
+console.dir(mergeKListsViolence(a), { depth: null });
+
+// *其他的解法：还可以遍历list，然后提取出最小的val加入新链表，这个方法每一次循环都要比较每一个链表的头节点。如果进行优化的话就是使用优先级队列了，比较的过程不需要对每一个数进行比较。所以我上面的解法有一些问题
+
+
+// *还可以再次进行优化，使用分治的思想，基本与归并算法一致了

@@ -1,5 +1,6 @@
 // !依然动态规划问题
 
+// *还不算太难，根据动态规划的三步就可以比较轻松的解决问题 具体的可以看 64,70 题
 export function uniquePath(m: number, n: number): number {
   const memo: number[][] = Array.from({ length: m }, (v, k) => {
     return Array.from({ length: n }, (e, j) => {

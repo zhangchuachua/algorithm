@@ -19,3 +19,23 @@ export function rob(nums: number[]): number {
   }
   return Math.max(...memory); // *注意：这里返回的不是最后一个元素，而是memory中最大的哪个元素。因为最后一个元素不一定就是最大的元素，比如 [1,2,3,1] 最大的应该是：1+3 = 4 也就是索引为2.
 }
+
+console.log(rob([100, 1, 1, 100]));
+
+// *这里其实是可以优化空间复杂度（也可以顺带优化事件复杂度）的，这里的状态转意方程最最正确的应该是： dp[i] = max(dp[i-2] + nums[i], dp[i-1]); 因为我上面的并不完全对，所以时间复杂度也被拖累了。
+// !因为我们在遇到这个房间的时候有两个选择，偷窃这间房，然后不偷窃 i-1 的房间，总金额就是： dp[i-2] + nums[i]; 第二个选项是我不偷这间房，然后偷 i-1 的房间，那么金额就为 dp[i-1] 所以只需要比较这两项就足够了。所以可以优化空间复杂度，对应的，不用比较这么多，我也就不用展开数组了，优化时间复杂度。
+// !我不这样想的原因是我觉得，总有那么一种情况是 dp[i-1] dp[i] 都不能选择的情况，比如说 [100, 1, 1, 100] 运行到索引为 2 时，值为 1 的时候，很明显最好的方案是： 100 + 100 ,这个情况下，索引为 1，2 都不能偷，但是当我们套用状态转移方程的时候，会发现并没有错误。因为这种方式没有略过任何一个值， 而我的方式使用了 slice 直接略过了 i-1。 正因如此，我的 [1,2,3,1] 不能返回最后一个值。
+// *所以，还是应该更加仔细的分析问题。尤其是第二步
+
+export function robOfficial(nums: number[]): number {
+  if (nums.length === 1) return nums[0];
+  let first = nums[0];
+  let second = Math.max(first, nums[1]);
+  for (let i = 2; i < nums.length; i++) {
+    let tmp = second;
+    second = Math.max(first + nums[i], second);
+    first = tmp;
+  }
+  return second;
+}
+

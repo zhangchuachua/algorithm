@@ -1,4 +1,4 @@
-import { longestPalindromeDP } from "./other/5.最长回文子串";
+import { longestPalindromeDP } from "./dp/5.最长回文子串";
 
 console.log(longestPalindromeDP("aacabdkacaa"));
 

@@ -5,14 +5,14 @@ export function repeatedStringMatch(a: string, b: string): number {
   if (b.includes(a)) {
     const arr = b.split(a);
     const lastIndex = arr.length - 1;
-    if (arr.filter((item) => item !== "").length > 2) return -1;
+    if (arr.filter((item) => item !== '').length > 2) return -1;
     if (
       a.slice(a.length - arr[0].length) !== arr[0] ||
       a.slice(0, arr[lastIndex].length) !== arr[lastIndex]
     )
       return -1;
-    if (arr[0] === "" && arr[lastIndex] === "") return lastIndex;
-    else if (arr[0] !== "" && arr[lastIndex] !== "") return lastIndex + 2;
+    if (arr[0] === '' && arr[lastIndex] === '') return lastIndex;
+    else if (arr[0] !== '' && arr[lastIndex] !== '') return lastIndex + 2;
     else return lastIndex + 1;
   }
   if (a.includes(b)) return 1;
@@ -42,6 +42,15 @@ export function repeatStringMatchOptimization(a: string, b: string): number {
 
 // *子串匹配算法,也叫 RK 算法,全称叫: Rabin-Karp 算法, 专门用于结局, 子串的匹配问题, 这道题也算一个子串匹配问题, 所以可以用这个算法解决
 
+// !字符串哈希教程：https://www.bilibili.com/video/BV12T4y1g7Vc?from=search&seid=14862855392596893775&spm_id_from=333.337.0.0
+
+// *要判断是否是子串，如果使用循环比较的方式时间复杂度很高，一般都为字符串的长度，但是使用字符串哈希可以让空间复杂度降低为 O(1) 原理就是将字符串转换为 number，计算机直接比较 number 就可以做到空间复杂度为 O(1) ，比如说全是小写字母的字符串，就可以使用 26 进制，比如说 abc = 1*26^2 + 2*26^1 + 3*26^0 这样就转换为数字了，因为小写字母一共有 26 个，这样一来所有小写字母组成的字符串都可以转换为一个独立的，唯一的数字。 但是如果对中文文字进行 hash 转换的话，因为中文的字非唱多，我们如果取十万进制的话，那么就算是一个长度为十的字符串转换成的数字大小都是： X*100000^9... 这样肯定是不行的，所以我们可以对这个数字进行取模操作，也就是 % 。但是对 取模 数字的选取也很重要，比如说如果取 2 的话，那么得出的结果，一定是 0， 1，很明显，非常容易发生冲突，
+// !所以我们取模的数应该尽可能的大，同时这个数最好与进制数互质，互质说明两个数不能互相除，可以减少出错。
+// !当取 131, 1331, 13331, ... 作为进制时，出错是最少的，这个是由计算机科学家得出的。
+// !通过上面两步还是有可能会发生错误，也就是哈希冲突所以我们还需要解决冲突
+// !第一种，可以直接直接比较子串每个字符。但是时间复杂度较高
+// !第二种，计算的时候使用不同的取模值，计算出两个结果，这个时候两个结果都是错误的概率是非常小的。
+// !布隆过滤?
 const repeatedStringMatchRK = (a: string, b: string): number => {
   const an = a.length, bn = b.length;
   const index = strStr(a, b);
@@ -54,33 +63,36 @@ const repeatedStringMatchRK = (a: string, b: string): number => {
   return Math.floor((bn + index - an - 1) / an) + 2;
 };
 
-const strStr = (haystack: string, needle: string) => {
-  const n = haystack.length, m = needle.length;
+const strStr = (a: string, b: string) => {
+  const n = a.length, m = b.length;
   if (m === 0) {
     return 0;
   }
 
   let k1 = 1000000009;
   let k2 = 1337;
-  let kMod1 = Math.floor(Math.random() * k1) + k1;
-  let kMod2 = Math.floor(Math.random() * k2) + k2;
+  let kMod1 = Math.floor(Math.random() * k1) + k1;// *取模的值，也就是 mod  这里是通过计算的方式得出的
+  let kMod2 = Math.floor(Math.random() * k2) + k2;// *这里是得出的进制数，也是通过计算的方式得出，与上面的解释有一点出入，但是并不影响。
 
   let hashNeedle = 0;
+  // *循环，对 b 进行 hash 转换。
   for (let i = 0; i < m; i++) {
-    const c = needle[i].charCodeAt(0);
+    // *得出当前字符的 ASCII 码。
+    const c = b[i].charCodeAt(0);
+    // !然后转换为 hash 值。注意：这里的表达式：比如说当前字符串为： abc 那么整个字符串的值为 1*26^2 + 2*26^1 + c*26^0 (假设这里的 a 为 1, 进制数 X 为 26) 因为循环只能一个一个遍历啊，所以真实过程是： a -> ab -> abc，a: 1*26^0 ab: 1*26^1 + 2*26^1，很明显 ab = hashCode(a) * X + b 。 这个表达式就是这么推导出来的。  最后再取模。
     hashNeedle = (hashNeedle * kMod2 + c) % kMod1;
   }
   let hashHaystack = 0, extra = 1;
   for (let i = 0; i < m - 1; i++) {
-    hashHaystack = (hashHaystack * kMod2 + haystack[i % n].charCodeAt(0)) % kMod1;
+    hashHaystack = (hashHaystack * kMod2 + a[i % n].charCodeAt(0)) % kMod1;
     extra = (extra * kMod2) % kMod1;
   }
   for (let i = m - 1; (i - m + 1) < n; i++) {
-    hashHaystack = (hashHaystack * kMod2 + haystack[i % n].charCodeAt(0)) % kMod1;
+    hashHaystack = (hashHaystack * kMod2 + a[i % n].charCodeAt(0)) % kMod1;
     if (hashHaystack === hashNeedle) {
       return i - m + 1;
     }
-    hashHaystack = (hashHaystack - extra * haystack[(i - m + 1) % n].charCodeAt(0)) % kMod1;
+    hashHaystack = (hashHaystack - extra * a[(i - m + 1) % n].charCodeAt(0)) % kMod1;
     hashHaystack = (hashHaystack + kMod1) % kMod1;
   }
   return -1;

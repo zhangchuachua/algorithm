@@ -11,7 +11,7 @@ export default function bitAdd(a: number, b: number): number {
   return sum;
 }
 
-console.log(bitAdd(-10, 3));
+// console.log(bitAdd(1.1, 2.3));
 
 /**
  * a = 10; b = 3 解析

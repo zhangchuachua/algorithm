@@ -11,8 +11,8 @@ export default function bitAdd(a: number, b: number): number {
   return sum;
 }
 
-// console.log(bitAdd(1.1, 2.3));
-
+// console.log(bitAdd(2147483648, 1 ));
+// console.log();
 /**
  * a = 10; b = 3 解析
  * a = 10 = 1010; b = 3 = 0011; 要实现的结果为 1010 + 0011 = 1101 = 13

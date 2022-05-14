@@ -17,6 +17,7 @@ export default function bitDivision(a: number, b: number): number {
   // *为什么循环的条件是 <= 呢，假设 a = 8, b = 2 当 quotient = 3, bitAdd(product, _b) = 8 此时应该再进行一次循环，当条件中不包含等于时就结束了，得到 quotient = 3, 但是预期得到 4
   while (bitAdd(product, _b) <= _a) {
     quotient = bitAdd(quotient, 1);
+    console.log(quotient);
     product = bitAdd(product, _b);
   }
   // 判断符号位
@@ -27,4 +28,4 @@ export default function bitDivision(a: number, b: number): number {
   return quotient;
 }
 
-console.log(bitDivision(-2147483648, -1));
+console.log(bitDivision(2147483647, 2));

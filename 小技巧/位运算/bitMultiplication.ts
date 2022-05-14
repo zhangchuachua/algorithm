@@ -20,4 +20,3 @@ export default function bitMultiplication(a: number, b: number): number {
   }
   return product;
 }
-console.log(bitMultiplication(-10, -3));

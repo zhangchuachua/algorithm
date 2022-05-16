@@ -1,6 +1,5 @@
 // *位除法
 // *位除法 a / b = quotient, quotient * b = a;
-// leetcode 29
 import bitAdd from "./bitAdd";
 
 // !这个写法无法通过 leetcode 的测试，因为其中有 极大数 运算时会出现位溢出

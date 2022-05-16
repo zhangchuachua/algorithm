@@ -24,7 +24,7 @@ export function findNthDigitMath(n: number): number {
   return Number(String(value)[remainder - 1]);// *remainder 与索引不一样，需要 -1
 }
 
-// *这道题还可以使用二分查找的方式来做。
+// TODO 这道题还可以使用二分查找的方式来做。
 
 
 console.log(findNthDigit(10000), findNthDigitMath(10000));

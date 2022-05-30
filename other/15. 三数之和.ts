@@ -11,7 +11,6 @@ export function threeSum(nums: number[]): number[][] {
                 arr.sort((a, b) => a - b);
                 set.add(JSON.stringify(arr));
             }
-            ;
         }
     }
     const res: number[][] = [];

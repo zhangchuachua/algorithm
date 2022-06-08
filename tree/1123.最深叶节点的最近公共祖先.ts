@@ -66,6 +66,7 @@ function lcaDeepestLeaves(root: TreeNode | null): TreeNode | null {
 export function lcaDeepestLeavesDfs(root: TreeNode | null): TreeNode | null {
   if (!root) return root;
 
+  // *不断比较左右子树的深度
   function getCommonRoot(r: TreeNode): TreeNode {
     if (!r.left && !r.right) return r;
     const ld = dfs(r.left, 1);
@@ -74,6 +75,7 @@ export function lcaDeepestLeavesDfs(root: TreeNode | null): TreeNode | null {
     return getCommonRoot((ld > rd ? r.left : r.right) as TreeNode);
   }
 
+  // *递归获得深度
   function dfs(r: TreeNode | null, depth: number): number {
     if (!r) return 0;
     if (!r.left && !r.right) return depth;

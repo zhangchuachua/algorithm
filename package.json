@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "数据结构与算法一定要拿下！！！",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

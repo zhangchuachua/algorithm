@@ -21,9 +21,7 @@ export function sortArray(nums: number[]): number[] {
       // console.log(l, r);
       if (l <= r) { // TODO 为什么需要等于
         // *使用位运算会出错，因为遇到l=r的情况就会出错
-        const temp = arr[l];
-        arr[l] = arr[r];
-        arr[r] = temp;
+        swap(arr, l, r);
         l++;
         r--;
       }
@@ -36,7 +34,13 @@ export function sortArray(nums: number[]): number[] {
   quickSort(nums);
   return nums;
 };
+
 // console.log(sortArray([9, 82, 1, 24, 7]));
+
+function swap(arr: number[], i: number, j: number) {
+  if (i === j) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]]
+}
 
 // !这是阮一峰版的快速排序，这可以说是非常非常好理解了。 还是随机选择一个基数，然后直接创建两个数组来存储比基数小的和大于等于基数的，然后不断递归就可以了。因为使用了额外的两个数组进行存储，就不会出现指针的指向问题了，但是也是因为两个数组导致性能差了很多。 如果便于理解的话还是可以的。
 export function quickSortRuanYiFeng(nums: number[]): number[] {
@@ -60,9 +64,7 @@ export function quickSortOfficial(nums: number[], l: number = 0, r: number = num
   // *交换函数，因为使用了位运算，所以要判断两个索引是否一致，如果都指向一个元素就不会进行交换。
   function swap(arr: number[], i: number, j: number) {
     if (i === j) return;
-    arr[i] = arr[i] ^ arr[j];
-    arr[j] = arr[i] ^ arr[j];
-    arr[i] = arr[i] ^ arr[j];
+    [arr[i], arr[j]] = [arr[j], arr[i]]
   }
 
   // *随机选择基数
@@ -74,7 +76,7 @@ export function quickSortOfficial(nums: number[], l: number = 0, r: number = num
   // console.log(nums, pivot, pivotIndex, l, r, 'first');
   //  *交换基数和最后一个元素
   swap(nums, pivotIndex, r);
-  // !这个代码看着真的简洁， 真的只有这么点
+  // 这个代码看着真的简洁， 真的只有这么点
   while (j < r) {
     // !注意，这里的情况都是升序  遇到比基数的大的 j 就加1，让 [i+1,j] 这个区间都是大于基数的。
     if (nums[j] > nums[r]) j++;
